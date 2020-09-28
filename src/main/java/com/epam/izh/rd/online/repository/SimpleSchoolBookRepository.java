@@ -40,20 +40,14 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
      */
     @Override
     public SchoolBook[] findByName(String name) {
-        int indexBook = 0;
-        for (SchoolBook i : schoolBooks){
-            if (schoolBooks.equals(i.getName())){
-                indexBook++;
+        SchoolBook [] schoolBook = {};
+        for (SchoolBook books : schoolBooks){
+            if (books.getName().equals(name)){
+                schoolBook = Arrays.copyOf(schoolBook,schoolBook.length +1);
+                schoolBook[schoolBook.length - 1] = books;
             }
         }
-        SchoolBook[] findBooks = new SchoolBook[indexBook + 1];
-        for (int i = 0, j = 0; i< schoolBooks.length; i++){
-            if (name.equals(schoolBooks[i].getName())){
-                findBooks[j] = schoolBooks[i];
-                j++;
-            }
-        }
-        return findBooks;
+        return schoolBook;
     }
     /**
      * Метод должен удалять книги из массива schoolBooks по названию.
@@ -70,23 +64,17 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
      */
     @Override
     public boolean removeByName(String name) {
-        while (findByName(name).length>0) {
-           int indexOfDelete = 0;
-           for (int i = 0;i<schoolBooks.length;i++){
-               if (name.equals(schoolBooks[i].getName())){
-                   indexOfDelete =i;
-                   break;
-               }
-           }
-           for(int i = indexOfDelete;i<schoolBooks.length - 1;i++){
-               schoolBooks[i] = schoolBooks[i+1];
-           }
-           schoolBooks = Arrays.copyOf(schoolBooks,schoolBooks.length-1);
-           if (findByName(name).length ==0){
-               return true;
+       if (findByName(name).length == 0 ){
+           return false;
+       }
+       SchoolBook [] schools = new SchoolBook[count()- findByName(name).length];
+       for (int i = 0;i<count();i++){
+           if (schoolBooks[i].getName() != name){
+               schools[i] = schoolBooks[i];
            }
        }
-        return false;
+       schoolBooks = schools;
+       return true;
     }
 
     /**

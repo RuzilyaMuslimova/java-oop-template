@@ -73,15 +73,21 @@ public  class SimpleAuthorRepository implements AuthorRepository{
      */
     @Override
     public boolean remove(Author author) {
-        List<Author> stringAuthor = new ArrayList<Author>(Arrays.asList(authors));
-        if (stringAuthor.contains(author)) {
-            int index = stringAuthor.indexOf(author);
-                  stringAuthor.remove(index);
-                  Author [] authors = new Author[stringAuthor.size()-1];
-                  return true;
-              }
-        return false;
-
+        Author [] deleteAuthors;
+        if (findByFullName(author.getName(),author.getLastName())== null){
+            return false;
+        }else {
+            deleteAuthors = new Author[count()-1];
+            int j = 0;
+            for (Author authorsArray : authors){
+                if (authorsArray !=findByFullName(author.getName(),author.getLastName())){
+                    deleteAuthors[j] = authorsArray;
+                    j++;
+                }
+            }
+        }
+        authors = deleteAuthors;
+        return true;
     }
     /**
      * Метод возвращает количество сохраненных сущностей в массиве authors.
